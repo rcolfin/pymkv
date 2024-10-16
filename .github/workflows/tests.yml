@@ -2,8 +2,11 @@ name: Tests
 on: [push, pull_request]
 jobs:
   run:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
+      - name: ubuntu version
+        run: |
+          lsb_release -a
       - name: Check out repository
         uses: actions/checkout@v4
       - name: Set up python
@@ -13,13 +16,13 @@ jobs:
           python-version: '3.11'
       - name: Set up MKVToolNix repository
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget gnupg
+          sudo apt-get -qq update
+          sudo apt-get -qq install -y wget gnupg
           sudo wget -O /usr/share/keyrings/gpg-pub-moritzbunkus.gpg https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg
-          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/ubuntu/ jammy main" | sudo tee /etc/apt/sources.list.d/mkvtoolnix.list
-          sudo apt-get update
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/ubuntu/ noble main" | sudo tee /etc/apt/sources.list.d/mkvtoolnix.list
+          sudo apt-get -qq update
       - name: Install MKVToolNix
-        run: sudo apt-get install -y mkvtoolnix mkvtoolnix-gui
+        run: sudo apt-get -qq install -y mkvtoolnix mkvtoolnix-gui
       - name: Verify MKVToolNix installation
         run: mkvmerge -V
       - name: Install Poetry

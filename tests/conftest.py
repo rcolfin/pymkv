@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from pathlib import Path
 
 import pytest
@@ -19,7 +20,11 @@ def get_path_test_file_two(get_base_path: Path) -> Path:
 
 
 @pytest.fixture(autouse=True)
-def cleanup_mkv_files(get_base_path: Path, get_path_test_file: Path, get_path_test_file_two: Path) -> None:  # noqa: PT004
+def _cleanup_mkv_files(
+    get_base_path: Path,
+    get_path_test_file: Path,
+    get_path_test_file_two: Path,
+) -> Generator[None, None, None]:
     yield
     for ext in ["*.mkv", "*.mp4", "*.ogg", "*.txt"]:
         for file_path in get_base_path.glob(ext):
